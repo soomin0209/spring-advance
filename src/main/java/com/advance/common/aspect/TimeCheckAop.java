@@ -2,6 +2,7 @@ package com.advance.common.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -42,9 +43,15 @@ public class TimeCheckAop {
     // -> userEmailUpdate 메서드 실행 끝 -> TimeCheckAop '실행 후 로직' 수행
     // -> Controller에서 return 값 리턴 -> JwtFilter 통과 -> postman으로 결과 전달
 
-    @Before("execution(* com.advance.user.service.UserService.*(..))")
+//    @Before("execution(* com.advance.user.service.UserService.*(..))")
+//    public void executionTime() throws Throwable {
+//
+//        log.info("메서드 실행 전에만 수행");
+//    }
+
+    @AfterReturning("execution(* com.advance.user.service.UserService.*(..))")
     public void executionTime() throws Throwable {
 
-        log.info("메서드 실행 전에만 수행");
+        log.info("메서드 실행 이후에 수행");
     }
 }
