@@ -8,10 +8,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -53,7 +57,11 @@ public class JwtFilter extends OncePerRequestFilter {
         // JWT 토큰에서 복호화 한 데이터 저장하기
         String username = jwtUtil.extractUsername(jwt);
 
-        request.setAttribute("username", username);
+        // request.setAttribute("username", username); -> Spring Security 방식에 맞는 방법으로 변경
+        // Spring Security에서 사용하는 User 객체 생성
+        User user = new User(username, "", List.of());
+
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));
 
         filterChain.doFilter(request, response);
     }
