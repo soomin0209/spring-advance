@@ -1,5 +1,6 @@
 package com.advance.common.utils;
 
+import com.advance.common.enums.UserRoleEnum;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
@@ -44,10 +45,11 @@ public class JwtUtil {
     }
 
     // 토큰 생성
-    public String generateToken(String username) {
+    public String generateToken(String username, UserRoleEnum role) {
         Date now = new Date();
         return BEARER_PREFIX + Jwts.builder()
                 .claim("username", username)
+                .claim("auth", role)
                 .issuedAt(now)
                 .expiration(new Date(now.getTime() + TOKEN_TIME))
                 .signWith(key, Jwts.SIG.HS256)
@@ -74,6 +76,10 @@ public class JwtUtil {
 
     public String extractUsername(String token) {
         return extractAllClaims(token).get("username", String.class);
+    }
+
+    public String extractRole(String token) {
+        return extractAllClaims(token).get("auth", String.class);
     }
 }
 

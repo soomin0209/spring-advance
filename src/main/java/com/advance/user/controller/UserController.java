@@ -7,6 +7,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,20 +20,20 @@ public class UserController {
 
     private final JwtUtil jwtUtil;
 
+    @PreAuthorize("hasRole('ADMIN')") // -> SecurityConfig @EnableMethodSecurity 활성화
     @GetMapping("/get")
-    public String getUserInfo(HttpServletRequest request) {
-        String username = (String) request.getAttribute("username");
-        log.info(username);
-        return username;
+    public String getUserInfo(@AuthenticationPrincipal User user) {
+        log.info(user.getUsername());
+        return user.getUsername();
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-
-        String token  = jwtUtil.generateToken(request.getUsername());
-
-        return ResponseEntity.ok(new LoginResponse(token));
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+//
+//        String token  = jwtUtil.generateToken(request.getUsername());
+//
+//        return ResponseEntity.ok(new LoginResponse(token));
+//    }
 
     @GetMapping("/validate")
     public ResponseEntity<Boolean> checkValidate(HttpServletRequest request) {
