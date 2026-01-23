@@ -1,0 +1,22 @@
+package com.advance.user.model.dto;
+
+import com.advance.common.entity.User;
+import com.advance.common.enums.UserRoleEnum;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserDto {
+
+    private long id;
+    private String username;
+    private String email;
+    private UserRoleEnum roleEnum;
+
+    public static UserDto from(User user) {
+        return new UserDto(user.getId(), user.getUsername(), user.getEmail(), user.getRoleEnum());
+    }
+}
