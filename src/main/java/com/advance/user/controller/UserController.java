@@ -2,7 +2,9 @@ package com.advance.user.controller;
 
 import com.advance.common.utils.JwtUtil;
 import com.advance.user.model.request.LoginRequest;
+import com.advance.user.model.request.UpdateUserEmailRequest;
 import com.advance.user.model.response.LoginResponse;
+import com.advance.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final JwtUtil jwtUtil;
+    private final UserService userService;
 
     @PreAuthorize("hasRole('ADMIN')") // -> SecurityConfig @EnableMethodSecurity 활성화
     @GetMapping("/get")
@@ -58,4 +61,12 @@ public class UserController {
 
         return ResponseEntity.ok(username);
     }
+
+    @PutMapping("/{username}/email")
+    public ResponseEntity<String> updateEmail(@PathVariable String username, @RequestBody UpdateUserEmailRequest request) {
+        userService.updateUserEmail(username, request.getEmail());
+        return ResponseEntity.ok("수정 완료");
+    }
+
+    // 이메일 수정은 본인만 가능
 }

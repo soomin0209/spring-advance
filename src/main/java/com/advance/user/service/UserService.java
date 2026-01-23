@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -35,6 +36,16 @@ public class UserService {
         }
 
         return jwtUtil.generateToken(user.getUsername(), user.getRoleEnum());
+    }
+
+    @Transactional
+    public void updateUserEmail(String username, String email) {
+        User user = userRepository.findUserByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
+        );
+
+        user.updateEmail(email);
+        userRepository.save(user);
     }
 }
 
