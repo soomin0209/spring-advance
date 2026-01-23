@@ -52,9 +52,15 @@ public class TimeCheckAop {
 //        log.info("메서드 실행 이후에 수행");
 //    }
 
-    @AfterThrowing("execution(* com.advance.user.service.UserService.*(..))")
+//    @AfterThrowing("execution(* com.advance.user.service.UserService.*(..))")
+//    public void executionTime() throws Throwable {
+//
+//        log.info("메서드 실행 중 예외 발생할 때 수행");
+//    }
+
+    @After("execution(* com.advance.user.service.UserService.*(..))")
     public void executionTime() throws Throwable {
 
-        log.info("메서드 실행 중 예외 발생할 때 수행");
+        log.info("메서드 실행 후 무조건 수행");
     }
 }
