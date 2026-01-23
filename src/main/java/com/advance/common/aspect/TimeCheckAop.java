@@ -2,10 +2,7 @@ package com.advance.common.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 
 @Aspect
@@ -49,9 +46,15 @@ public class TimeCheckAop {
 //        log.info("메서드 실행 전에만 수행");
 //    }
 
-    @AfterReturning("execution(* com.advance.user.service.UserService.*(..))")
+//    @AfterReturning("execution(* com.advance.user.service.UserService.*(..))")
+//    public void executionTime() throws Throwable {
+//
+//        log.info("메서드 실행 이후에 수행");
+//    }
+
+    @AfterThrowing("execution(* com.advance.user.service.UserService.*(..))")
     public void executionTime() throws Throwable {
 
-        log.info("메서드 실행 이후에 수행");
+        log.info("메서드 실행 중 예외 발생할 때 수행");
     }
 }

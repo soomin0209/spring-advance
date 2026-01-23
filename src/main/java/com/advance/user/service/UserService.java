@@ -47,7 +47,10 @@ public class UserService {
         user.updateEmail(email);
         userRepository.save(user);
 
-        log.info("5번째: 서비스 레이어 메서드 실행 완료");
+        // AfterThrowing 실습 -> 예외 발생
+        throw new IllegalArgumentException("예외 발생");
+
+        // log.info("5번째: 서비스 레이어 메서드 실행 완료");
     }
 }
 
