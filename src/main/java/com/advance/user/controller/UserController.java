@@ -64,7 +64,10 @@ public class UserController {
 
     @PutMapping("/{username}/email")
     public ResponseEntity<String> updateEmail(@PathVariable String username, @RequestBody UpdateUserEmailRequest request) {
+        log.info("3번째: Interceptor를 통과 후 Controller 로직 수행");
         userService.updateUserEmail(username, request.getEmail());
+
+        log.info("7번째: Controller 수행 완료");
         return ResponseEntity.ok("수정 완료");
     }
 

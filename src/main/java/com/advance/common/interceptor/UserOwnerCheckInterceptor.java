@@ -39,6 +39,8 @@ public class UserOwnerCheckInterceptor implements HandlerInterceptor {
             return false;
         }
 
+        log.info("2번째: Interceptor에서 controller 들어가기 전 마지막 권한 검사 실행");
+
         // 5. 일치 -> 변경 (Controller 접근 허용)
         return true;
     }
