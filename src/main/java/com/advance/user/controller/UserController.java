@@ -18,9 +18,10 @@ public class UserController {
     private final JwtUtil jwtUtil;
 
     @GetMapping("/get")
-    public String getUserInfo() {
-        log.info("호출");
-        return "호출됨";
+    public String getUserInfo(HttpServletRequest request) {
+        String username = (String) request.getAttribute("username");
+        log.info(username);
+        return username;
     }
 
     @PostMapping("/login")

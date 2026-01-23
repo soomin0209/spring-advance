@@ -1,0 +1,60 @@
+package com.advance.common.filter;
+
+import com.advance.common.utils.JwtUtil;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+
+@Component
+@Slf4j
+@RequiredArgsConstructor
+@Order(3)
+public class JwtFilter extends OncePerRequestFilter {
+
+
+    private final JwtUtil jwtUtil;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        // 토큰 발급받는 로그인의 경우에는 토큰 검사를 하지 않아도 통과
+        String requestURL = request.getRequestURI();
+
+        if (requestURL.equals("/api/login")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // JWT 토큰이 있는지 없는지 검사
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if (authorizationHeader == null || authorizationHeader.isBlank()) {
+            log.info("JWT 토큰이 필요합니다.");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT 토큰이 필요합니다.");
+            return;
+        }
+
+        // JWT 토큰이 있다면 유효한 토큰인지 검사
+        String jwt = authorizationHeader.substring(7);
+
+        if (!jwtUtil.validateToken(jwt)) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write("{\"error\": \"Unauthorized\"}");
+        }
+
+        // JWT 토큰에서 복호화 한 데이터 저장하기
+        String username = jwtUtil.extractUsername(jwt);
+
+        request.setAttribute("username", username);
+
+        filterChain.doFilter(request, response);
+    }
+}
