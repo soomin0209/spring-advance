@@ -68,10 +68,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));
 
-        log.info("1번째: JwtFilter 인증/인가 성공 -> 다음 단계로");
+//        log.info("1번째: JwtFilter 인증/인가 성공 -> 다음 단계로");
 
         filterChain.doFilter(request, response);
 
-        log.info("8번째: JwtFilter 통과 완료 후 postman에 전달");
+//        log.info("8번째: JwtFilter 통과 완료 후 postman에 전달");
     }
 }

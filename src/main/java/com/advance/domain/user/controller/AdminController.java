@@ -1,4 +1,4 @@
-package com.advance.user.controller;
+package com.advance.domain.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.advance.user.model.response;
+package com.advance.domain.user.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

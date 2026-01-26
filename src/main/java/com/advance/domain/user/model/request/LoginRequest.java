@@ -1,4 +1,4 @@
-package com.advance.user.model.request;
+package com.advance.domain.user.model.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

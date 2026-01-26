@@ -1,11 +1,9 @@
-package com.advance.user.controller;
+package com.advance.domain.user.controller;
 
 import com.advance.common.utils.JwtUtil;
-import com.advance.user.model.dto.UserDto;
-import com.advance.user.model.request.LoginRequest;
-import com.advance.user.model.request.UpdateUserEmailRequest;
-import com.advance.user.model.response.LoginResponse;
-import com.advance.user.service.UserService;
+import com.advance.domain.user.model.dto.UserDto;
+import com.advance.domain.user.model.request.UpdateUserEmailRequest;
+import com.advance.domain.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
