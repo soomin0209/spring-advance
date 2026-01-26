@@ -25,8 +25,7 @@ public class PostService {
                 () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
         );
 
-        Post post = new Post(content, user);
-        postRepository.save(post);
+        Post post = postRepository.save(new Post(content, user));
         return PostDto.from(post);
     }
 
