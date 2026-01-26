@@ -60,9 +60,12 @@ public class PostService {
 //                .map(post -> new PostSummaryDto(post.getContent(), post.getComments().size()))
 //                .toList();
 
-        List<Post> postList = postRepository.findByUserUsername(username);
-        return postList.stream()
-                .map(post -> new PostSummaryDto(post.getContent(), post.getComments().size()))
-                .toList();
+//        List<Post> postList = postRepository.findByUserUsername(username);
+//        return postList.stream()
+//                .map(post -> new PostSummaryDto(post.getContent(), post.getComments().size()))
+//                .toList();
+
+        List<PostSummaryDto> result = postRepository.findAllWithCommentsByUsername(username);
+        return result;
     }
 }
