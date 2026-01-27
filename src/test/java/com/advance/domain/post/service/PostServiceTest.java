@@ -36,27 +36,29 @@ class PostServiceTest {
     @InjectMocks
     private PostService postService;
 
+    // static 변수 활용
+    public static String DEFAULT_USERNAME = "김수민";
+
     // 게시글 생성
     @Test
     @DisplayName("createPost_게시글생성_성공")
     void createPost_성공_케이스() {
         // Given
-        String username = "김수민";
         String content = "테스트 게시글";
-        User testUser = new User(username, "1234", "test@test.com", UserRoleEnum.ADMIN);
+        User testUser = new User(DEFAULT_USERNAME, "1234", "test@test.com", UserRoleEnum.ADMIN);
         Post testPost = new Post(content, testUser);
         ReflectionTestUtils.setField(testPost, "id", 1L);
 
-        when(userRepository.findUserByUsername(username)).thenReturn(Optional.of(testUser));
+        when(userRepository.findUserByUsername(DEFAULT_USERNAME)).thenReturn(Optional.of(testUser));
         when(postRepository.save(any(Post.class))).thenReturn(testPost);
 
         // When
-        PostDto result = postService.createPost(username, content);
+        PostDto result = postService.createPost(DEFAULT_USERNAME, content);
 
         // Then
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(testPost.getId());
-        assertThat(result.getUsername()).isEqualTo(username);
+        assertThat(result.getUsername()).isEqualTo(DEFAULT_USERNAME);
         assertThat(result.getContent()).isEqualTo(content);
     }
 
@@ -64,8 +66,7 @@ class PostServiceTest {
     @DisplayName("getPostListByUsername_게시글조회_성공")
     void getPostListByUsername_성공_케이스() {
         // Given
-        String username = "김수민";
-        User testUser = new User(username, "1234", "test@test.com", UserRoleEnum.ADMIN);
+        User testUser = new User(DEFAULT_USERNAME, "1234", "test@test.com", UserRoleEnum.ADMIN);
         List<Post> postList = List.of(
                 new Post("테스트 게시글 1", testUser),
                 new Post("테스트 게시글 2", testUser)
@@ -74,16 +75,16 @@ class PostServiceTest {
         ReflectionTestUtils.setField(postList.get(1), "id", 2L);
 
         testUser.getPosts().addAll(postList);
-        when(userRepository.findUserByUsername(username)).thenReturn(Optional.of(testUser));
+        when(userRepository.findUserByUsername(DEFAULT_USERNAME)).thenReturn(Optional.of(testUser));
 
         // When
-        List<PostDto> result = postService.getPostListByUsername(username);
+        List<PostDto> result = postService.getPostListByUsername(DEFAULT_USERNAME);
 
         // Then
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getUsername()).isEqualTo(username);
+        assertThat(result.get(0).getUsername()).isEqualTo(DEFAULT_USERNAME);
         assertThat(result.get(0).getContent()).isEqualTo("테스트 게시글 1");
-        assertThat(result.get(1).getUsername()).isEqualTo(username);
+        assertThat(result.get(1).getUsername()).isEqualTo(DEFAULT_USERNAME);
         assertThat(result.get(1).getContent()).isEqualTo("테스트 게시글 2");
     }
 
