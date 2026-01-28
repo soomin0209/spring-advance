@@ -39,6 +39,13 @@ class PostServiceTest {
     @InjectMocks
     private PostService postService;
 
+    // 공용 데이터 + @BeforeEach 조합
+    private User testUser;
+    @BeforeEach
+    void setUp() {
+        testUser = UserFixture.createUserAdminRole();
+    }
+
     // static 변수 활용
     // public static String DEFAULT_USERNAME = "김수민";
 
@@ -47,7 +54,6 @@ class PostServiceTest {
     @DisplayName("createPost_게시글생성_성공")
     void createPost_성공_케이스() {
         // Given
-        User testUser = UserFixture.createUserAdminRole();
         Post testPost = PostFixture.createPost1();
 
         when(userRepository.findUserByUsername(testUser.getUsername())).thenReturn(Optional.of(testUser));
@@ -67,7 +73,6 @@ class PostServiceTest {
     @DisplayName("getPostListByUsername_게시글조회_성공")
     void getPostListByUsername_성공_케이스() {
         // Given
-        User testUser = UserFixture.createUserAdminRole();
         List<Post> postList = List.of(
                 PostFixture.createPost1(),
                 PostFixture.createPost2()
