@@ -3,9 +3,12 @@ package com.advance.domain.post.service;
 import com.advance.common.entity.Post;
 import com.advance.common.entity.User;
 import com.advance.common.enums.UserRoleEnum;
+import com.advance.data.PostFixture;
+import com.advance.data.UserFixture;
 import com.advance.domain.post.model.dto.PostDto;
 import com.advance.domain.post.repository.PostRepository;
 import com.advance.domain.user.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,54 +40,50 @@ class PostServiceTest {
     private PostService postService;
 
     // static 변수 활용
-    public static String DEFAULT_USERNAME = "김수민";
+    // public static String DEFAULT_USERNAME = "김수민";
 
     // 게시글 생성
     @Test
     @DisplayName("createPost_게시글생성_성공")
     void createPost_성공_케이스() {
         // Given
-        String content = "테스트 게시글";
-        User testUser = new User(DEFAULT_USERNAME, "1234", "test@test.com", UserRoleEnum.ADMIN);
-        Post testPost = new Post(content, testUser);
-        ReflectionTestUtils.setField(testPost, "id", 1L);
+        User testUser = UserFixture.createUserAdminRole();
+        Post testPost = PostFixture.createPost1();
 
-        when(userRepository.findUserByUsername(DEFAULT_USERNAME)).thenReturn(Optional.of(testUser));
+        when(userRepository.findUserByUsername(testUser.getUsername())).thenReturn(Optional.of(testUser));
         when(postRepository.save(any(Post.class))).thenReturn(testPost);
 
         // When
-        PostDto result = postService.createPost(DEFAULT_USERNAME, content);
+        PostDto result = postService.createPost(testUser.getUsername(), testPost.getContent());
 
         // Then
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(testPost.getId());
-        assertThat(result.getUsername()).isEqualTo(DEFAULT_USERNAME);
-        assertThat(result.getContent()).isEqualTo(content);
+        assertThat(result.getUsername()).isEqualTo(testUser.getUsername());
+        assertThat(result.getContent()).isEqualTo(testPost.getContent());
     }
 
     @Test
     @DisplayName("getPostListByUsername_게시글조회_성공")
     void getPostListByUsername_성공_케이스() {
         // Given
-        User testUser = new User(DEFAULT_USERNAME, "1234", "test@test.com", UserRoleEnum.ADMIN);
+        User testUser = UserFixture.createUserAdminRole();
         List<Post> postList = List.of(
-                new Post("테스트 게시글 1", testUser),
-                new Post("테스트 게시글 2", testUser)
+                PostFixture.createPost1(),
+                PostFixture.createPost2()
         );
-        ReflectionTestUtils.setField(postList.get(0), "id", 1L);
-        ReflectionTestUtils.setField(postList.get(1), "id", 2L);
 
         testUser.getPosts().addAll(postList);
-        when(userRepository.findUserByUsername(DEFAULT_USERNAME)).thenReturn(Optional.of(testUser));
+        when(userRepository.findUserByUsername(testUser.getUsername())).thenReturn(Optional.of(testUser));
 
         // When
-        List<PostDto> result = postService.getPostListByUsername(DEFAULT_USERNAME);
+        List<PostDto> result = postService.getPostListByUsername(testUser.getUsername());
 
         // Then
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getUsername()).isEqualTo(DEFAULT_USERNAME);
+        assertThat(result.get(0).getUsername()).isEqualTo(testUser.getUsername());
         assertThat(result.get(0).getContent()).isEqualTo("테스트 게시글 1");
-        assertThat(result.get(1).getUsername()).isEqualTo(DEFAULT_USERNAME);
+        assertThat(result.get(1).getUsername()).isEqualTo(testUser.getUsername());
         assertThat(result.get(1).getContent()).isEqualTo("테스트 게시글 2");
     }
 
